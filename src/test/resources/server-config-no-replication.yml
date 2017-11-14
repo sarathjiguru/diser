@@ -1,0 +1,4 @@
+master.port: 7433
+replication:
+  - diser://127.0.0.1:7434/
+  - diser://127.0.0.1:7435/
