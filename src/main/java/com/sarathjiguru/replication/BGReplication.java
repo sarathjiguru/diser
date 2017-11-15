@@ -25,7 +25,7 @@ public class BGReplication implements Replication {
 
     @Override
     public String replicate(String command) {
-        BGThread bgThread = new BGThread(replicators);
+        BGThread bgThread = new BGThread(replicators, command);
         Thread thread = new Thread(bgThread);
         thread.setDaemon(true);
         thread.start();
