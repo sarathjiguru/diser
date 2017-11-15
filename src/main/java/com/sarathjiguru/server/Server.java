@@ -15,20 +15,58 @@
  */
 package com.sarathjiguru.server;
 
+import com.sarathjiguru.config.ServerConfig;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.EventLoopGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
+import org.apache.commons.cli.*;
+
 /**
  * Echoes back any received data from a client.
  */
 public final class Server {
 
-    static final boolean SSL = System.getProperty("ssl") != null;
-    static final int PORT = Integer.parseInt(System.getProperty("port", "8007"));
-
     public static void main(String[] args) throws Exception {
+        Options options = new Options();
+        Option option;
+
+        option = new Option("c", "config", true, "Server configuration file");
+        option.setRequired(false);
+        options.addOption(option);
+
+        option = new Option("p", "port", true, "Port to run the server");
+        option.setRequired(false);
+        options.addOption(option);
+
+
+        CommandLineParser parser = new BasicParser();
+        CommandLine cmd = null;
+        try {
+            cmd = parser.parse(options, args);
+            ServerConfig servConfig;
+            if (cmd.hasOption("p")) {
+                servConfig = new ServerConfig(Integer.parseInt(cmd.getOptionValue("p")));
+                startServer(servConfig);
+
+            } else if (cmd.hasOption("c")) {
+                servConfig = new ServerConfig(cmd.getOptionValue("c"));
+                startServer(servConfig);
+            } else {
+                System.exit(-1);
+            }
+
+        } catch (ParseException e) {
+            HelpFormatter hf = new HelpFormatter();
+            hf.printHelp(Server.class.getCanonicalName(), options);
+            System.exit(0);
+        }
+
+
+    }
+
+    private static void startServer(ServerConfig servConfig) throws InterruptedException {
         // Configure the server.
         EventLoopGroup bossGroup = new NioEventLoopGroup();
         EventLoopGroup workGroup = new NioEventLoopGroup();
@@ -36,8 +74,8 @@ public final class Server {
             ServerBootstrap bootstrap = new ServerBootstrap()
                     .group(bossGroup, workGroup)
                     .channel(NioServerSocketChannel.class)
-                    .childHandler(new DiserInitializer());
-            ChannelFuture future = bootstrap.bind(PORT).sync();
+                    .childHandler(new DiserInitializer(servConfig.replication()));
+            ChannelFuture future = bootstrap.bind(servConfig.masterPort()).sync();
             future.channel().closeFuture().sync();
         } finally {
             bossGroup.shutdownGracefully();

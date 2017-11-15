@@ -16,6 +16,7 @@
 package com.sarathjiguru.server;
 
 import com.sarathjiguru.memory.DiMemory;
+import com.sarathjiguru.replication.Replication;
 import io.netty.channel.ChannelHandler.Sharable;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
@@ -26,10 +27,17 @@ import io.netty.channel.SimpleChannelInboundHandler;
 @Sharable
 public class ServerHandler extends SimpleChannelInboundHandler<String> {
 
+    private final Replication replication;
+
+    public ServerHandler(Replication replication) {
+        this.replication = replication;
+    }
+
     @Override
     public void channelRead0(ChannelHandlerContext ctx, String msg) {
         DiMemory diMemory = new DiMemory(msg);
         System.out.println("server received:" + msg);
+        replication.replicate(msg);
         ctx.channel().writeAndFlush(diMemory.result() + "\r\n");
     }
 
