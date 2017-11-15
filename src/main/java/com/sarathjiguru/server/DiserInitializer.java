@@ -1,5 +1,6 @@
 package com.sarathjiguru.server;
 
+import com.sarathjiguru.replication.Replication;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelPipeline;
 import io.netty.channel.socket.SocketChannel;
@@ -13,6 +14,12 @@ import io.netty.handler.codec.string.StringEncoder;
  */
 public class DiserInitializer extends ChannelInitializer<SocketChannel> {
 
+    private final Replication replication;
+
+    public DiserInitializer(Replication replication) {
+        this.replication = replication;
+    }
+
     @Override
     protected void initChannel(SocketChannel socketChannel) throws Exception {
         ChannelPipeline pipeline = socketChannel.pipeline();
@@ -21,7 +28,7 @@ public class DiserInitializer extends ChannelInitializer<SocketChannel> {
         pipeline.addLast("decoder", new StringDecoder());
         pipeline.addLast("encoder", new StringEncoder());
 
-        pipeline.addLast("handler", new ServerHandler());
+        pipeline.addLast("handler", new ServerHandler(replication));
     }
 
 }

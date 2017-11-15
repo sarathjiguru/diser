@@ -38,4 +38,12 @@ public class ServerConfig {
             this.replication = new BGReplication(replicators);
         }
     }
+
+    public int masterPort() {
+        return masterPort;
+    }
+
+    public Replication replication() {
+        return replication;
+    }
 }
