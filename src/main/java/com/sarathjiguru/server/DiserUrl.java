@@ -6,8 +6,10 @@ package com.sarathjiguru.server;
 public class DiserUrl {
     private final String host;
     private final int port;
+    private final String r;
 
     public DiserUrl(String r) {
+        this.r = r;
         String hostPort = r.replace("diser://", "").replace("/", "");
         String[] split = hostPort.split(":");
         this.host = split[0];
@@ -20,5 +22,10 @@ public class DiserUrl {
 
     public String host() {
         return host;
+    }
+
+    @Override
+    public String toString() {
+        return r;
     }
 }

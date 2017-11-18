@@ -31,7 +31,8 @@ public class BGThread implements Runnable {
 
     private void sendCommandForReplication() throws InterruptedException, ExecutionException {
         for (DiserUrl dUrl : replicators) {
-            DiserTransportCli.connect(dUrl.host(), dUrl.port()).runCommand(command);
+            DiserTransportCli connect = DiserTransportCli.connect(dUrl.host(), dUrl.port());
+            connect.runCommand(command);
         }
     }
 }

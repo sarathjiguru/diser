@@ -35,8 +35,8 @@ public class ServerHandler extends SimpleChannelInboundHandler<String> {
 
     @Override
     public void channelRead0(ChannelHandlerContext ctx, String msg) {
-        DiMemory diMemory = new DiMemory(msg);
         System.out.println("server received:" + msg);
+        DiMemory diMemory = new DiMemory(msg);
         replication.replicate(msg);
         ctx.channel().writeAndFlush(diMemory.result() + "\r\n");
     }
