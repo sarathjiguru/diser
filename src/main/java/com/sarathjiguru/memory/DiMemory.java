@@ -1,5 +1,6 @@
 package com.sarathjiguru.memory;
 
+import java.io.IOException;
 import java.util.HashMap;
 
 /**
@@ -10,12 +11,13 @@ public class DiMemory {
 
     static HashMap<String, Object> map = new HashMap<>();
     private final Object returnValue;
-
-    public DiMemory(String commandObject) {
+    public DiMemory(String commandObject, DiskWriter dw) throws IOException {
         this.diserCommand = new DiserCommand(commandObject.trim());
+
         switch (this.diserCommand.command) {
             case SET:
                 map.put(this.diserCommand.key, this.diserCommand.value);
+                dw.write(commandObject.trim());
                 returnValue = 1;
                 break;
             case GET:

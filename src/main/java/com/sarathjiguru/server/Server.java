@@ -16,12 +16,15 @@
 package com.sarathjiguru.server;
 
 import com.sarathjiguru.config.ServerConfig;
+import com.sarathjiguru.memory.DiskWriter;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.EventLoopGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
 import org.apache.commons.cli.*;
+
+import java.io.IOException;
 
 /**
  * Echoes back any received data from a client.
@@ -66,20 +69,22 @@ public final class Server {
 
     }
 
-    private static void startServer(ServerConfig servConfig) throws InterruptedException {
+    private static void startServer(ServerConfig servConfig) throws InterruptedException, IOException {
         // Configure the server.
         EventLoopGroup bossGroup = new NioEventLoopGroup();
         EventLoopGroup workGroup = new NioEventLoopGroup();
+        DiskWriter dw = new DiskWriter();
         try {
             ServerBootstrap bootstrap = new ServerBootstrap()
                     .group(bossGroup, workGroup)
                     .channel(NioServerSocketChannel.class)
-                    .childHandler(new DiserInitializer(servConfig.replication()));
+                    .childHandler(new DiserInitializer(servConfig.replication(), dw));
             ChannelFuture future = bootstrap.bind(servConfig.masterPort()).sync();
             future.channel().closeFuture().sync();
         } finally {
             bossGroup.shutdownGracefully();
             workGroup.shutdownGracefully();
+            dw.close();
         }
     }
 }

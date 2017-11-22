@@ -16,10 +16,13 @@
 package com.sarathjiguru.server;
 
 import com.sarathjiguru.memory.DiMemory;
+import com.sarathjiguru.memory.DiskWriter;
 import com.sarathjiguru.replication.Replication;
 import io.netty.channel.ChannelHandler.Sharable;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
+
+import java.io.IOException;
 
 /**
  * Handler implementation for the echo server.
@@ -28,15 +31,17 @@ import io.netty.channel.SimpleChannelInboundHandler;
 public class ServerHandler extends SimpleChannelInboundHandler<String> {
 
     private final Replication replication;
+    private final DiskWriter diskWriter;
 
-    public ServerHandler(Replication replication) {
+    public ServerHandler(Replication replication, DiskWriter diskWriter) {
         this.replication = replication;
+        this.diskWriter = diskWriter;
     }
 
     @Override
-    public void channelRead0(ChannelHandlerContext ctx, String msg) {
+    public void channelRead0(ChannelHandlerContext ctx, String msg) throws IOException {
         System.out.println("server received:" + msg);
-        DiMemory diMemory = new DiMemory(msg);
+        DiMemory diMemory = new DiMemory(msg, diskWriter);
         replication.replicate(msg);
         ctx.channel().writeAndFlush(diMemory.result() + "\r\n");
     }
