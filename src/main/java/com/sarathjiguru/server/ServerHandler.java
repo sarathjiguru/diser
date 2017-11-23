@@ -16,7 +16,6 @@
 package com.sarathjiguru.server;
 
 import com.sarathjiguru.memory.DiMemory;
-import com.sarathjiguru.memory.DiskWriter;
 import com.sarathjiguru.replication.Replication;
 import io.netty.channel.ChannelHandler.Sharable;
 import io.netty.channel.ChannelHandlerContext;
@@ -31,19 +30,18 @@ import java.io.IOException;
 public class ServerHandler extends SimpleChannelInboundHandler<String> {
 
     private final Replication replication;
-    private final DiskWriter diskWriter;
+    private final DiMemory diM;
 
-    public ServerHandler(Replication replication, DiskWriter diskWriter) {
+    public ServerHandler(Replication replication, DiMemory diMemory) {
         this.replication = replication;
-        this.diskWriter = diskWriter;
+        this.diM = diMemory;
     }
 
     @Override
     public void channelRead0(ChannelHandlerContext ctx, String msg) throws IOException {
         System.out.println("server received:" + msg);
-        DiMemory diMemory = new DiMemory(msg, diskWriter);
         replication.replicate(msg);
-        ctx.channel().writeAndFlush(diMemory.result() + "\r\n");
+        ctx.channel().writeAndFlush(diM.result(msg) + "\r\n");
     }
 
     @Override

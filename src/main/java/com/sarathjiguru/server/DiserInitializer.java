@@ -1,5 +1,6 @@
 package com.sarathjiguru.server;
 
+import com.sarathjiguru.memory.DiMemory;
 import com.sarathjiguru.memory.DiskWriter;
 import com.sarathjiguru.replication.Replication;
 import io.netty.channel.ChannelInitializer;
@@ -31,7 +32,7 @@ public class DiserInitializer extends ChannelInitializer<SocketChannel> {
         pipeline.addLast("decoder", new StringDecoder());
         pipeline.addLast("encoder", new StringEncoder());
 
-        pipeline.addLast("handler", new ServerHandler(replication, dw));
+        pipeline.addLast("handler", new ServerHandler(replication, new DiMemory(dw)));
     }
 
 }
