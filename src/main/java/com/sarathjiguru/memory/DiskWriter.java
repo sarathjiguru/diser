@@ -5,6 +5,7 @@ import org.joda.time.DateTime;
 import java.io.BufferedWriter;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 import java.util.Date;
@@ -25,10 +26,12 @@ public class DiskWriter {
     public DiskWriter(String path) throws IOException {
         this.timeout = 5000;
         StandardOpenOption so = StandardOpenOption.CREATE;
-        if (Files.exists(Paths.get(path))) {
+        Path filePath = Paths.get(path);
+        Files.createDirectories(filePath);
+        if (Files.exists(filePath)) {
             so = StandardOpenOption.APPEND;
         }
-        bufferedWriter = Files.newBufferedWriter(Paths.get(path), so);
+        bufferedWriter = Files.newBufferedWriter(filePath, so);
         this.nextTime = DateTime.now();
     }
 
