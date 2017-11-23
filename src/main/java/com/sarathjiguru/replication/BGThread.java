@@ -1,6 +1,7 @@
 package com.sarathjiguru.replication;
 
 import com.sarathjiguru.transport.DiserTransportCli;
+import com.sarathjiguru.transport.DiserUrl;
 
 import java.util.List;
 import java.util.concurrent.ExecutionException;
