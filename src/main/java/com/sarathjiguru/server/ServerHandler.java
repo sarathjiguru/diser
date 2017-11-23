@@ -29,6 +29,7 @@ import java.io.IOException;
 @Sharable
 public class ServerHandler extends SimpleChannelInboundHandler<String> {
 
+    public static final String CARRIAGE_RETURN = "\r\n";
     private final Replication replication;
     private final DiMemory diM;
 
@@ -41,7 +42,7 @@ public class ServerHandler extends SimpleChannelInboundHandler<String> {
     public void channelRead0(ChannelHandlerContext ctx, String msg) throws IOException {
         System.out.println("server received:" + msg);
         replication.replicate(msg);
-        ctx.channel().writeAndFlush(diM.result(msg) + "\r\n");
+        ctx.channel().writeAndFlush(diM.result(msg) + CARRIAGE_RETURN);
     }
 
     @Override

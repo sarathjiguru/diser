@@ -20,7 +20,11 @@ public class DiskWriter {
 
     public DiskWriter() throws IOException {
         this.timeout = 5000;
-        bufferedWriter = Files.newBufferedWriter(Paths.get("/tmp/diser-data.txt"), StandardOpenOption.APPEND);
+        StandardOpenOption so = StandardOpenOption.CREATE;
+        if(Files.exists(Paths.get("/tmp/diser-data.txt"))){
+            so = StandardOpenOption.APPEND;
+        }
+        bufferedWriter = Files.newBufferedWriter(Paths.get("/tmp/diser-data.txt"), so);
         this.nextTime = DateTime.now();
     }
 

@@ -1,6 +1,5 @@
 package com.sarathjiguru.replication;
 
-import com.sarathjiguru.server.DiserUrl;
 import com.sarathjiguru.transport.DiserTransportCli;
 
 import java.util.List;

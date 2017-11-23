@@ -1,10 +1,8 @@
 package com.sarathjiguru.replication;
 
-import com.sarathjiguru.server.DiserUrl;
-
 import java.util.ArrayList;
 import java.util.List;
-
+import com.sarathjiguru.transport.DiserUrl;
 /**
  * Created by sarath on 15/11/17.
  */
