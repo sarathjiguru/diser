@@ -17,6 +17,7 @@ package com.sarathjiguru.server;
 
 import com.sarathjiguru.config.ServerConfig;
 import com.sarathjiguru.memory.DiMemory;
+import com.sarathjiguru.memory.DiserCommand;
 import com.sarathjiguru.memory.DiskWriter;
 import com.sarathjiguru.replication.Replication;
 import io.netty.channel.ChannelHandler.Sharable;
@@ -26,7 +27,7 @@ import io.netty.channel.SimpleChannelInboundHandler;
 import java.io.IOException;
 
 /**
- * Handler implementation for the echo server.
+ * Handler implementation for the Diser.
  */
 @Sharable
 public class ServerHandler extends SimpleChannelInboundHandler<String> {
@@ -44,8 +45,9 @@ public class ServerHandler extends SimpleChannelInboundHandler<String> {
     @Override
     public void channelRead0(ChannelHandlerContext ctx, String msg) throws IOException {
         System.out.println("server received:" + msg);
-        replication.replicate(msg);
-        ctx.channel().writeAndFlush(diM.result(msg) + CARRIAGE_RETURN);
+        DiserCommand diserCommand = new DiserCommand(msg);
+        replication.replicate(diserCommand);
+        ctx.channel().writeAndFlush(diM.result(diserCommand) + CARRIAGE_RETURN);
     }
 
     @Override

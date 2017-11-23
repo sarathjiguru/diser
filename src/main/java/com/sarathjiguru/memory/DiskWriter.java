@@ -12,10 +12,12 @@ import java.util.Date;
 
 /**
  * Created by sarath on 22/11/17.
+ * Writes SET commands to file periodically.
  */
 public class DiskWriter {
 
     private final int timeout;
+    private final Path filePath;
     private DateTime nextTime;
     private BufferedWriter bufferedWriter;
 
@@ -26,7 +28,7 @@ public class DiskWriter {
     public DiskWriter(String path) throws IOException {
         this.timeout = 5000;
         StandardOpenOption so = StandardOpenOption.CREATE;
-        Path filePath = Paths.get(path);
+        this.filePath = Paths.get(path);
         if (!Files.exists(filePath.getParent())) {
             Files.createDirectories(filePath.getParent());
         }
@@ -42,7 +44,7 @@ public class DiskWriter {
         bufferedWriter.newLine();
         if (nextTime.plus(this.timeout).isAfterNow()) {
             bufferedWriter.flush();
-            bufferedWriter = Files.newBufferedWriter(Paths.get("/tmp/diser-data.txt"), StandardOpenOption.APPEND);
+            bufferedWriter = Files.newBufferedWriter(this.filePath, StandardOpenOption.APPEND);
             nextTime = DateTime.now();
         }
     }

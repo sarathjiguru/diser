@@ -41,6 +41,10 @@ public class DiMemoryTest {
         assertEquals(diMemory.result(commandObject), "4");
 
 
+        commandObject = "@replicatedSET$a$4";
+        assertEquals(diMemory.result(commandObject), "1");
+
+
     }
 
 }

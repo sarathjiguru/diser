@@ -7,9 +7,13 @@ import java.util.List;
 
 /**
  * Created by sarath on 15/11/17.
+ * Maps YAML file to Java Object
  */
 public class ServerConfigurator {
 
+    /**
+     * Default constructor used by ObjectMapper
+     */
     ServerConfigurator() {
 
     }

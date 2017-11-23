@@ -2,13 +2,16 @@ package com.sarathjiguru.memory;
 
 /**
  * Created by sarath on 23/11/17.
+ * Parses the String Command sent from client.
  */
 public class DiserCommand {
     public static final String SEPARATOR = "\\$";
-    private final String commandObject;
-    Commands command;
+    public static final String REPLICATED = "@replicated";
+    private String commandObject;
+    public Commands command;
     String key;
     Object value;
+    public boolean isReplicated;
 
     @Override
     public String toString() {
@@ -16,6 +19,11 @@ public class DiserCommand {
     }
 
     private void parseCommandObject(String commandObject) {
+        if (commandObject.contains(REPLICATED)) {
+            commandObject = commandObject.replace(REPLICATED, "");
+            this.isReplicated = true;
+        }
+
         String[] split = commandObject.split(SEPARATOR);
         this.command = Commands.UNSUPPORTED;
         try {
@@ -31,10 +39,10 @@ public class DiserCommand {
         } catch (Exception e) {
             this.command = Commands.UNSUPPORTED;
         }
+        this.commandObject = commandObject;
     }
 
-    DiserCommand(String commandObject) {
-        this.commandObject = commandObject;
+    public DiserCommand(String commandObject) {
         parseCommandObject(commandObject);
     }
 }
