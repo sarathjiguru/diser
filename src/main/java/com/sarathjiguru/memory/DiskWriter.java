@@ -19,12 +19,16 @@ public class DiskWriter {
     private BufferedWriter bufferedWriter;
 
     public DiskWriter() throws IOException {
+        this("/tmp/diser-data.txt");
+    }
+
+    public DiskWriter(String path) throws IOException {
         this.timeout = 5000;
         StandardOpenOption so = StandardOpenOption.CREATE;
-        if(Files.exists(Paths.get("/tmp/diser-data.txt"))){
+        if (Files.exists(Paths.get(path))) {
             so = StandardOpenOption.APPEND;
         }
-        bufferedWriter = Files.newBufferedWriter(Paths.get("/tmp/diser-data.txt"), so);
+        bufferedWriter = Files.newBufferedWriter(Paths.get(path), so);
         this.nextTime = DateTime.now();
     }
 

@@ -15,7 +15,9 @@
  */
 package com.sarathjiguru.server;
 
+import com.sarathjiguru.config.ServerConfig;
 import com.sarathjiguru.memory.DiMemory;
+import com.sarathjiguru.memory.DiskWriter;
 import com.sarathjiguru.replication.Replication;
 import io.netty.channel.ChannelHandler.Sharable;
 import io.netty.channel.ChannelHandlerContext;
@@ -33,9 +35,10 @@ public class ServerHandler extends SimpleChannelInboundHandler<String> {
     private final Replication replication;
     private final DiMemory diM;
 
-    public ServerHandler(Replication replication, DiMemory diMemory) {
-        this.replication = replication;
-        this.diM = diMemory;
+    public ServerHandler(ServerConfig serverConfig) throws IOException {
+        this.replication = serverConfig.replication();
+        DiskWriter dw = new DiskWriter(serverConfig.getDiskPath());
+        this.diM = new DiMemory(dw);
     }
 
     @Override

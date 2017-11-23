@@ -17,6 +17,9 @@ public class ServerConfigurator {
     @JsonProperty("master.port")
     private int masterPort;
 
+    @JsonProperty("master.diskpath")
+    private String diskPath;
+
     @JsonInclude(JsonInclude.Include.NON_NULL)
     @JsonProperty("replication")
     private List<String> replicators;
@@ -35,5 +38,9 @@ public class ServerConfigurator {
 
     public void setReplicators(List<String> replicators) {
         this.replicators = replicators;
+    }
+
+    public String getDiskPath() {
+        return diskPath;
     }
 }

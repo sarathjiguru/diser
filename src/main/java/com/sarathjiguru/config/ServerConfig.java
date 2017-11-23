@@ -17,11 +17,13 @@ public class ServerConfig {
 
     private final int masterPort;
     private final Replication replication;
+    private final String diskPath;
     private YAMLFactory yamlFactory;
     private ObjectMapper objectMapper;
 
     public ServerConfig(int masterPort) {
         this.masterPort = masterPort;
+        this.diskPath = "/tmp/diser-data.txt";
         this.replication = new NoOpReplication();
     }
 
@@ -31,6 +33,7 @@ public class ServerConfig {
         ServerConfigurator sc = objectMapper.readValue(new File(filePath), ServerConfigurator.class);
 
         masterPort = sc.getMasterPort();
+        diskPath = sc.getDiskPath();
         List<String> replicators = sc.getReplicators();
         if (replicators == null || replicators.size() == 0) {
             this.replication = new NoOpReplication();
@@ -45,5 +48,9 @@ public class ServerConfig {
 
     public Replication replication() {
         return replication;
+    }
+
+    public String getDiskPath() {
+        return diskPath;
     }
 }

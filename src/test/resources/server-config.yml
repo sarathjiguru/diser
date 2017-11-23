@@ -1,3 +1,4 @@
 master.port: 8007
+master.diskpath: "/tmp/8007/diser-keys.txt"
 replication:
   - diser://127.0.0.1:7433/
