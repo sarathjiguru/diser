@@ -27,7 +27,9 @@ public class DiskWriter {
         this.timeout = 5000;
         StandardOpenOption so = StandardOpenOption.CREATE;
         Path filePath = Paths.get(path);
-        Files.createDirectories(filePath);
+        if (!Files.exists(filePath.getParent())) {
+            Files.createDirectories(filePath.getParent());
+        }
         if (Files.exists(filePath)) {
             so = StandardOpenOption.APPEND;
         }
